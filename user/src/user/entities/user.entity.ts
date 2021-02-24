@@ -1,3 +1,5 @@
+import { InternalServerErrorException } from '@nestjs/common';
+import { hash } from 'bcrypt';
 import {
   BeforeInsert,
   Column,
@@ -34,4 +36,16 @@ export class User {
 
   @VersionColumn()
   version: string;
+
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    try {
+      this.password = await hash(this.password, 10);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException({
+        message: [`Hashing Error`],
+      });
+    }
+  }
 }

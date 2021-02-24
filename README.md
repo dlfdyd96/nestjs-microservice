@@ -20,8 +20,10 @@ nest new user
 
 ```sh
 cd user
-npm i joi @nestjs/config @nestjs/mapped-types @nestjs/typeorm typeorm mysql2
+npm i joi @nestjs/config @nestjs/mapped-types @nestjs/typeorm typeorm mysql2 bcrypt
 npm i class-validator class-transformer
+
+npm i --D @types/bcrypt
 ```
 
 - env file

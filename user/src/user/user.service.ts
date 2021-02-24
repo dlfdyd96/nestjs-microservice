@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -12,23 +12,80 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private static readonly logger = new Logger(UserService.name);
+
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const userEntity = await this.userRepository.create(createUserDto);
+      const result = await this.userRepository.save(userEntity);
+
+      UserService.logger.log(result);
+
+      return result;
+    } catch (error) {
+      UserService.logger.log(error);
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    try {
+      const result = this.userRepository.findOne(id);
+
+      if (!result) {
+        throw new EntityNotFoundError(User, id);
+      }
+
+      UserService.logger.log(result);
+
+      return result;
+    } catch (error) {
+      UserService.logger.log(error);
+      throw error;
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      const user = await this.userRepository.findOne(id);
+
+      if (!user) {
+        throw new EntityNotFoundError(User, id);
+      }
+
+      const result = await this.userRepository.save({
+        ...user,
+        ...updateUserDto,
+      });
+
+      UserService.logger.log(result);
+
+      return result;
+    } catch (error) {
+      UserService.logger.log(error);
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    try {
+      const user = this.userRepository.findOne(id);
+      if (!user) {
+        throw new EntityNotFoundError(User, id);
+      }
+
+      const result = await this.userRepository.delete(id);
+
+      UserService.logger.log(result);
+
+      return result;
+    } catch (error) {
+      UserService.logger.log(error);
+      throw error;
+    }
   }
 }
