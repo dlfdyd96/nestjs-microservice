@@ -23,9 +23,6 @@ export class User {
   @Column()
   password: string; // 비밀번호
 
-  @Column({ nullable: true })
-  avatar: string; // 프로필 이미지 (nullable)
-
   @CreateDateColumn()
   createdAt: Date;
 

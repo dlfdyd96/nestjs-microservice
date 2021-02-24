@@ -21,6 +21,7 @@ nest new user
 ```sh
 cd user
 npm i joi @nestjs/config @nestjs/mapped-types @nestjs/typeorm typeorm mysql2
+npm i class-validator class-transformer
 ```
 
 - env file
@@ -69,6 +70,25 @@ MYSQL_DATABASE=ilyong
   providers: [AppService],
 })
 export class AppModule {}
+```
+
+- main
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    })
+  );
+
+  await app.listen(3000);
+}
+bootstrap();
 ```
 
 ### User CRUD
@@ -137,6 +157,35 @@ export class User {
   // ...
 })
 export class AppModule {}
+```
+
+- Create User DTO
+
+```ts
+export class CreateUserDto {
+  @IsEmail()
+  username: string;
+
+  @IsString()
+  password: string;
+
+  @IsString()
+  name: string;
+}
+```
+
+- Update User DTO
+
+```ts
+export class UpdateUserDto extends PartialType(
+  OmitType(CreateUserDto, ["username"] as const)
+) {}
+```
+
+- User Service
+
+```ts
+
 ```
 
 <hr>
