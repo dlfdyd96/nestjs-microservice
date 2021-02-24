@@ -79,6 +79,66 @@ export class AppModule {}
 nest generate resource user
 ```
 
+- user entity
+
+```ts
+@Entity({ name: "users" })
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string; // Primary Key
+
+  @Column()
+  username: string; // id(email 형식)
+
+  @Column()
+  name: string; // 사용자명
+
+  @Column()
+  password: string; // 비밀번호
+
+  @Column({ nullable: true })
+  avatar: string; // 프로필 이미지 (nullable)
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @VersionColumn()
+  version: string;
+}
+```
+
+- TypeORM
+
+```ts
+@Module({
+  imports: [
+    // ...
+    TypeOrmModule.forRoot({
+      type: "mysql",
+      host: process.env.MYSQL_HOST,
+      port: +process.env.MYSQL_PORT,
+      username: process.env.MYSQL_USERNAME,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+      synchronize: true,
+      logging: true,
+      charset: "utf8mb4_unicode_ci",
+      timezone: "+09:00",
+      entities: [User],
+    }),
+    // ...
+  ],
+  // ...
+})
+export class AppModule {}
+```
+
 <hr>
 
 ## Authentication Microservice
