@@ -14,6 +14,8 @@ nest new user
 
 ## User Microservice
 
+> User PORT <p> >`port: 3010` <br> >`microservice port: 4010`
+
 ### Setting Up
 
 - install package
@@ -462,6 +464,8 @@ Potential solutions:
     imports: [ /* the Module containing AUTH_CLIENT */ ]
   })
 
+...
+
 ```
 
 - User Module에 ClientModule 추가
@@ -492,6 +496,15 @@ export class UserModule {}
 <hr>
 
 ## Authentication Microservice
+
+> Authentication PORT <p> >`port: 3000` <br> >`microservice port: 4000`
+
+Authentication Microservice에서는
+
+- ID / Password 검증
+- 토큰발행
+- 토큰검증
+-
 
 ### Setting Up
 
