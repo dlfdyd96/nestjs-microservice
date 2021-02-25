@@ -6,10 +6,14 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { User } from './entities/user.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -25,8 +29,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  // @Get(':id')
+  @MessagePattern({ role: 'user', cmd: 'get' })
+  findOne(@Payload() id: string): Promise<User> {
     return this.userService.findOne(id);
   }
 
@@ -38,5 +43,11 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async getMe(): Promise<string> {
+    return `GetMe!`;
   }
 }
