@@ -511,7 +511,8 @@ Authentication Microservice에서는
 - install package
 
 ```sh
-npm i joi @nestjs/config
+npm i joi @nestjs/config @nestjs @nestjs/microservices
+npm i class-validator class-transformer
 ```
 
 - env file
