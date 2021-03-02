@@ -20,7 +20,7 @@ export class AuthService {
 
   signUp(data: CreateUserDto) {
     return this.authClient
-      .send({ cmd: 'create' }, data)
+      .send({ cmd: 'sign-up' }, data)
       .pipe(
         timeout(5000),
         catchError((err) => {
@@ -35,7 +35,7 @@ export class AuthService {
 
   signIn(data: SignInRequestDto) {
     return this.authClient
-      .send({ cmd: 'create' }, data)
+      .send({ cmd: 'sign-in' }, data)
       .pipe(
         timeout(5000),
         catchError((err) => {
