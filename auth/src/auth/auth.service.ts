@@ -38,16 +38,12 @@ export class AuthService {
           timeout(5000),
           catchError((err) => {
             if (err instanceof TimeoutError) {
-              throw throwError(new RequestTimeoutException());
+              return throwError(new RequestTimeoutException());
             }
-            throw throwError(err);
+            return throwError(err);
           }),
         )
-        .toPromise()
-        .then()
-        .catch((err) => {
-          throw new Error(err);
-        });
+        .toPromise();
 
       AuthService.logger.debug(publicUserInfo);
       return publicUserInfo;
