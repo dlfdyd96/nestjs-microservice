@@ -38,7 +38,7 @@ export class JwtMiddleware implements NestMiddleware {
             password,
             ...publicUser // 비밀번호를 제외하고 공개할 나머지 정보를 반환하기위해
           } = await this.userClient
-            .send<IUser>({ role: 'user', cmd: 'findOne' }, userId)
+            .send<IUser>({ cmd: 'findOne' }, userId)
             .pipe(
               timeout(5000),
               catchError((err) => {
@@ -55,9 +55,11 @@ export class JwtMiddleware implements NestMiddleware {
         } catch (err) {
           JwtMiddleware.logger.debug(err);
           console.log(err);
+          throw err;
         }
       }
     }
+    JwtMiddleware.logger.debug(`Nest!`);
     next();
   }
 }

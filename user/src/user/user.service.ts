@@ -23,8 +23,9 @@ export class UserService {
 
       return result;
     } catch (error) {
-      UserService.logger.log(error);
-      throw error;
+      UserService.logger.error(error);
+
+      return error;
     }
   }
 
@@ -79,6 +80,25 @@ export class UserService {
       }
 
       const result = await this.userRepository.delete(id);
+
+      UserService.logger.log(result);
+
+      return result;
+    } catch (error) {
+      UserService.logger.log(error);
+      throw error;
+    }
+  }
+
+  async findByUsername(username: string) {
+    try {
+      const result = await this.userRepository.findOne({
+        username,
+      });
+
+      if (!result) {
+        throw new EntityNotFoundError(User, username);
+      }
 
       UserService.logger.log(result);
 

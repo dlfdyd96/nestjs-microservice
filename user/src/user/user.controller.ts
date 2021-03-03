@@ -10,15 +10,17 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { User } from './entities/user.entity';
 
-@Controller('user')
+@Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @MessagePattern({ cmd: 'create' })
+  @MessagePattern({ cmd: 'createUser' })
+  // @EventPattern({ cmd: 'create_user' })
   create(@Payload() createUserDto: CreateUserDto) {
+    console.log(`왓다`);
     return this.userService.create(createUserDto);
   }
 
@@ -31,6 +33,12 @@ export class UserController {
   @MessagePattern({ cmd: 'findOne' })
   findOne(@Payload() id: string): Promise<User> {
     return this.userService.findOne(id);
+  }
+
+  // @Get(':id')
+  @MessagePattern({ cmd: 'findByUsername' })
+  findByUsername(@Payload() username: string): Promise<User> {
+    return this.userService.findByUsername(username);
   }
 
   @Put(':id')

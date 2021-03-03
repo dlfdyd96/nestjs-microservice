@@ -16,7 +16,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string; // Primary Key
 
-  @Column()
+  @Column({ unique: true })
   username: string; // id(email 형식)
 
   @Column()
